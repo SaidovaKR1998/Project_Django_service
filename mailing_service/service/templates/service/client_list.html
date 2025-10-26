@@ -1,0 +1,32 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Клиенты{% endblock %}
+
+{% block content %}
+<h1>Мои клиенты</h1>
+
+<a href="{% url 'service:client_create' %}" class="btn btn-primary mb-3">Добавить клиента</a>
+
+{% if clients %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>ФИО</th>
+                <th>Комментарий</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for client in clients %}
+            <tr>
+                <td>{{ client.email }}</td>
+                <td>{{ client.full_name }}</td>
+                <td>{{ client.comment|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>У вас пока нет клиентов.</p>
+{% endif %}
+{% endblock %}
