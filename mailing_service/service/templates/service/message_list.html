@@ -1,0 +1,30 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Сообщения{% endblock %}
+
+{% block content %}
+<h1>Мои сообщения</h1>
+
+<a href="{% url 'service:message_create' %}" class="btn btn-primary mb-3">Создать сообщение</a>
+
+{% if messages %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Тема</th>
+                <th>Текст</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in messages %}
+            <tr>
+                <td>{{ message.subject }}</td>
+                <td>{{ message.body|truncatewords:10 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>У вас пока нет сообщений.</p>
+{% endif %}
+{% endblock %}

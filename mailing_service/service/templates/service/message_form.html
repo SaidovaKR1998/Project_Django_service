@@ -1,0 +1,21 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Создать сообщение{% endblock %}
+
+{% block content %}
+<h1>Создать сообщение</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="subject" class="form-label">Тема письма</label>
+        <input type="text" class="form-control" id="subject" name="subject" required>
+    </div>
+    <div class="mb-3">
+        <label for="body" class="form-label">Текст письма</label>
+        <textarea class="form-control" id="body" name="body" rows="6" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <a href="{% url 'service:message_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}
