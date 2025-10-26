@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from .models import Mailing, MailingLog, Client
 
+@cache_page(60 * 15)  # Кешируем на 15 минут
 def index(request):
     # Считаем статистику
     total_mailings = Mailing.objects.all().count()
@@ -15,6 +16,7 @@ def index(request):
     return render(request, 'service/index.html', context)
 
 @login_required
+@cache_page(60 * 5)  # Кешируем на 5 минут
 def statistics(request):
     # Статистика только для текущего пользователя
     user_mailings = Mailing.objects.filter(owner=request.user)
