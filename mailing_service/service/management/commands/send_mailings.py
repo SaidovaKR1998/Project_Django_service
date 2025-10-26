@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.core.mail import send_mail
 from django.utils import timezone
 from service.models import Mailing, MailingLog, Client
+from django.conf import settings
 
 
 class Command(BaseCommand):
@@ -26,7 +27,7 @@ class Command(BaseCommand):
                 mailing.status = 'started'
                 mailing.save()
 
-            # Получаем всех клиентов этой рассылки
+            # Получаем всех клиентов этой рассылки (уже привязаны через ManyToMany)
             clients = mailing.clients.all()
 
             for client in clients:
@@ -35,7 +36,7 @@ class Command(BaseCommand):
                     send_mail(
                         subject=mailing.message.subject,
                         message=mailing.message.body,
-                        from_email='noreply@yourdomain.com',  # Замените на ваш email
+                        from_email=settings.DEFAULT_FROM_EMAIL,
                         recipient_list=[client.email],
                         fail_silently=False,  # Если ошибка, будет исключение
                     )
@@ -66,4 +67,8 @@ class Command(BaseCommand):
             end_time__lt=now
         )
         completed_mailings.update(status='completed')
-        self.stdout.write(self.style.SUCCESS("Рассылки завершены."))
+
+        if completed_mailings:
+            self.stdout.write(self.style.SUCCESS(f"Завершено рассылок: {completed_mailings.count()}"))
+        else:
+            self.stdout.write(self.style.SUCCESS("Нет рассылок для отправки."))
