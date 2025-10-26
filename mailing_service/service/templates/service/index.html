@@ -1,0 +1,63 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h1>Статистика рассылок</h1>
+
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Всего рассылок</h5>
+                <h2 class="card-text">{{ total_mailings }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Активных рассылок</h5>
+                <h2 class="card-text">{{ active_mailings }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Уникальных клиентов</h5>
+                <h2 class="card-text">{{ unique_clients }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if user.is_authenticated %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Быстрые действия</h5>
+                <a href="{% url 'service:client_create' %}" class="btn btn-outline-primary">Добавить клиента</a>
+                <a href="{% url 'service:message_create' %}" class="btn btn-outline-primary">Создать сообщение</a>
+                <a href="{% url 'service:mailing_create' %}" class="btn btn-outline-primary">Создать рассылку</a>
+                <a href="{% url 'service:statistics' %}" class="btn btn-outline-info">Посмотреть статистику</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Добро пожаловать в сервис рассылок!</h5>
+                <p class="card-text">Для работы с системой необходимо войти или зарегистрироваться.</p>
+                <a href="{% url 'users:login' %}" class="btn btn-primary">Войти</a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-primary">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

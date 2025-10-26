@@ -1,0 +1,46 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Рассылки{% endblock %}
+
+{% block content %}
+<h1>Мои рассылки</h1>
+
+<a href="{% url 'service:mailing_create' %}" class="btn btn-primary mb-3">Создать рассылку</a>
+
+{% if mailings %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Время начала</th>
+                <th>Время окончания</th>
+                <th>Статус</th>
+                <th>Сообщение</th>
+                <th>Клиентов</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mailing in mailings %}
+            <tr>
+                <td>{{ mailing.id }}</td>
+                <td>{{ mailing.start_time }}</td>
+                <td>{{ mailing.end_time }}</td>
+                <td>
+                    {% if mailing.status == 'created' %}
+                        <span class="badge bg-secondary">Создана</span>
+                    {% elif mailing.status == 'started' %}
+                        <span class="badge bg-success">Запущена</span>
+                    {% else %}
+                        <span class="badge bg-warning">Завершена</span>
+                    {% endif %}
+                </td>
+                <td>{{ mailing.message.subject }}</td>
+                <td>{{ mailing.clients.count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>У вас пока нет рассылок.</p>
+{% endif %}
+{% endblock %}

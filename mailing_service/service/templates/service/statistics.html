@@ -1,0 +1,57 @@
+{% extends 'service/base.html' %}
+
+{% block title %}Статистика{% endblock %}
+
+{% block content %}
+<h1>Статистика ваших рассылок</h1>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Общая статистика</h5>
+                <p><strong>Всего рассылок:</strong> {{ total_mailings }}</p>
+                <p><strong>Активных рассылок:</strong> {{ active_mailings }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Статистика отправок</h5>
+                <p><strong>Всего попыток отправки:</strong> {{ total_attempts }}</p>
+                <p><strong class="text-success">Успешных отправок:</strong> {{ successful_attempts }}</p>
+                <p><strong class="text-danger">Неуспешных отправок:</strong> {{ failed_attempts }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if total_attempts > 0 %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Процент успешных отправок</h5>
+                {% widthratio successful_attempts total_attempts 100 as success_percent %}
+                <div class="progress" style="height: 30px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ success_percent }}%">
+                        {{ success_percent }}% успешно
+                    </div>
+                    {% if failed_attempts > 0 %}
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: {% widthratio failed_attempts total_attempts 100 %}%">
+                        {% widthratio failed_attempts total_attempts 100 %}% ошибок
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="mt-4">
+    <a href="{% url 'service:mailing_list' %}" class="btn btn-primary">Управление рассылками</a>
+    <a href="{% url 'service:home' %}" class="btn btn-secondary">На главную</a>
+</div>
+{% endblock %}
