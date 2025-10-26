@@ -21,6 +21,9 @@ class Command(BaseCommand):
             end_time__gte=now
         )
 
+        success_count = 0
+        error_count = 0
+
         for mailing in mailings_to_send:
             # Меняем статус рассылки на "Запущена", если она была "Создана"
             if mailing.status == 'created':
@@ -46,6 +49,7 @@ class Command(BaseCommand):
                         server_response='200 OK',
                         mailing=mailing,
                     )
+                    success_count += 1
                     self.stdout.write(
                         self.style.SUCCESS(f"Письмо для {client.email} отправлено.")
                     )
@@ -57,6 +61,7 @@ class Command(BaseCommand):
                         server_response=str(e),
                         mailing=mailing,
                     )
+                    error_count += 1
                     self.stdout.write(
                         self.style.ERROR(f"Ошибка для {client.email}: {str(e)}")
                     )
@@ -66,19 +71,15 @@ class Command(BaseCommand):
             status='started',
             end_time__lt=now
         )
+        completed_count = completed_mailings.count()
         completed_mailings.update(status='completed')
 
-        if completed_mailings:
-            self.stdout.write(self.style.SUCCESS(f"Завершено рассылок: {completed_mailings.count()}"))
-        else:
-            self.stdout.write(self.style.SUCCESS("Нет рассылок для отправки."))
+        # Выводим итоговую статистику
+        self.stdout.write("=" * 50)
+        self.stdout.write(self.style.SUCCESS(f"ИТОГИ ОТПРАВКИ:"))
+        self.stdout.write(self.style.SUCCESS(f"Успешно отправлено: {success_count}"))
+        self.stdout.write(self.style.ERROR(f"Ошибок отправки: {error_count}"))
+        self.stdout.write(self.style.WARNING(f"Завершено рассылок: {completed_count}"))
 
-import logging
-
-logger = logging.getLogger(__name__)
-
-class Command(BaseCommand):
-    def handle(self, *args, **options):
-        logger.info("Запуск отправки рассылок")
-        # ... существующий код ...
-        logger.info(f"Успешно отправлено писем: {success_count}")
+        if success_count == 0 and error_count == 0:
+            self.stdout.write(self.style.WARNING("Нет рассылок для отправки."))
