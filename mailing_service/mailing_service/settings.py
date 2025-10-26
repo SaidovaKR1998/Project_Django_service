@@ -142,3 +142,22 @@ DEFAULT_FROM_EMAIL = 'noreply@mailingservice.com'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_URL = '/users/login/'
+
+# Кеширование
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
+
+# Или для простоты используем локальный кеш (для разработки)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Время жизни кеша (в секундах)
+CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 минут
