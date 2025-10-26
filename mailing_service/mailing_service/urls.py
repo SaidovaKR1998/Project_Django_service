@@ -1,7 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include # Импортируем include
+from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('service.urls')), # Подключаем URLs из приложения service
+    path('', include('service.urls')),
+    path('users/', include('users.urls')),  # Добавили эту строку
 ]
