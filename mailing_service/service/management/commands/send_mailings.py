@@ -72,3 +72,13 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f"Завершено рассылок: {completed_mailings.count()}"))
         else:
             self.stdout.write(self.style.SUCCESS("Нет рассылок для отправки."))
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        logger.info("Запуск отправки рассылок")
+        # ... существующий код ...
+        logger.info(f"Успешно отправлено писем: {success_count}")
