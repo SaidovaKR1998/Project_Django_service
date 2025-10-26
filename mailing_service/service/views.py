@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from .models import Mailing, Client
+from django.contrib.auth.decorators import login_required
+from .models import Mailing, MailingLog, Client
 
 def index(request):
     # Считаем статистику
@@ -13,3 +13,26 @@ def index(request):
         'unique_clients': unique_clients,
     }
     return render(request, 'service/index.html', context)
+
+@login_required
+def statistics(request):
+    # Статистика только для текущего пользователя
+    user_mailings = Mailing.objects.filter(owner=request.user)
+
+    total_mailings = user_mailings.count()
+    active_mailings = user_mailings.filter(status='started').count()
+
+    # Получаем логи для рассылок пользователя
+    mailing_logs = MailingLog.objects.filter(mailing__owner=request.user)
+    successful_attempts = mailing_logs.filter(status='success').count()
+    failed_attempts = mailing_logs.filter(status='failed').count()
+    total_attempts = mailing_logs.count()
+
+    context = {
+        'total_mailings': total_mailings,
+        'active_mailings': active_mailings,
+        'successful_attempts': successful_attempts,
+        'failed_attempts': failed_attempts,
+        'total_attempts': total_attempts,
+    }
+    return render(request, 'service/statistics.html', context)
