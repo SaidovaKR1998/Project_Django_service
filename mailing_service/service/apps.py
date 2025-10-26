@@ -6,5 +6,7 @@ class ServiceConfig(AppConfig):
     name = 'service'
 
     def ready(self):
-        from . import scheduler
-        scheduler.start_scheduler()
+        # Закомментируйте эту строку:
+        # from . import scheduler
+        # scheduler.start_scheduler()
+        pass  # Добавьте эту строку
