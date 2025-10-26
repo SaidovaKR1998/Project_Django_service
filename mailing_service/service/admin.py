@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import Client # Импортируем нашу модель
 
-# Register your models here.
+# Регистрируем модель для отображения в админке
+admin.site.register(Client)
